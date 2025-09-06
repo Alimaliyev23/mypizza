@@ -3,7 +3,7 @@ import { Button, Card, Form, InputGroup } from "react-bootstrap"
 import { BasketContext, DataContext } from "../provider/context"
 
 function Item({item: {id, name, img, price, desc}}) {
-    const {addToBasket} = useContext(BasketContext)
+    const {setShow, sebetDispatch} = useContext(BasketContext)
     const {size} = useContext(DataContext)
     const [olcu, setOlcu] = useState(Object.keys(price)[0])
     const [say, setSay] = useState(1)
@@ -27,7 +27,10 @@ function Item({item: {id, name, img, price, desc}}) {
                     <h5>{say * price[olcu]}₼</h5>
                 </div>
                 <div className="d-grid gap-2">
-                    <Button onClick={() => addToBasket(id, olcu, say)} variant="warning">Ye məni !</Button>
+                    <Button onClick={() => {
+                        sebetDispatch({type: 'add', payload: {id, size: olcu, quant: say}})
+                        setShow(true)
+                    }} variant="warning">Ye məni !</Button>
                 </div>
             </Card.Body>
         </Card>

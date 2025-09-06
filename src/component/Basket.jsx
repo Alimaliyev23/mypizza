@@ -3,16 +3,9 @@ import { Button, Modal, Table } from "react-bootstrap"
 import { FaRegTrashAlt } from "react-icons/fa"
 import { BasketContext, DataContext } from "../provider/context"
 
-
 function Basket() {
-    const {show, setShow, sebet, deleteFromBasket, updateBasket} = useContext(BasketContext)
+    const {show, setShow, sebet, sebetDispatch} = useContext(BasketContext)
     const {pizza} = useContext(DataContext)
-    
-    const totalAmount = sebet.reduce(( s , item ) => {
-     const p = pizza.find(elm => elm.id == item.id ) 
-     return s + (p.price[item.size] * item.quant)   
-    } ,  0)
-    
     let path = './assets/img/'
     return (
         <Modal show={show} onHide={() => setShow(false)} size="lg" centered >
@@ -45,12 +38,12 @@ function Basket() {
                                     <td>{item.size}</td>
                                     <td>{p.price[item.size]}₼</td>
                                     <td>
-                                         <Button onClick={() => updateBasket(i, item.quant - 1)} variant="outline-secondary"> - </Button>
+                                         <Button onClick={() => sebetDispatch({type: 'upd', payload: {i, quant: item.quant - 1}})} variant="outline-secondary"> - </Button>
                                         <span className="p-2">{item.quant}</span>
-                                        <Button onClick={() => updateBasket(i, item.quant + 1)} variant="outline-secondary"> + </Button>
+                                        <Button onClick={() => sebetDispatch({type: 'upd', payload: {i, quant: item.quant + 1}})} variant="outline-secondary"> + </Button>
                                     </td>
                                     <td>{item.quant * p.price[item.size]}₼</td>
-                                    <td><FaRegTrashAlt onClick={() => deleteFromBasket(i)} /></td>
+                                    <td><FaRegTrashAlt onClick={() => sebetDispatch({type: 'del', payload: {i}})} /></td>
                                 </tr>
                             )
                         } )}
@@ -58,7 +51,6 @@ function Basket() {
                     </Table>
             </Modal.Body>
             <Modal.Footer>
-                <h5>Ümumi məbləğ: {totalAmount} ₼</h5>
                 <Button onClick={() => setShow(false)}>Bağla</Button>
             </Modal.Footer>
         </Modal>
